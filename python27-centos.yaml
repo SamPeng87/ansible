@@ -1,0 +1,4 @@
+- hosts: bfc.spider
+  roles:
+#    - {role: python, modulesName: resolver,version: 2.7, pythonFile: Python-2.7.11,  tags: [pip-install]}
+    - {role: python, version: 2.7, pythonFile: Python-2.7.11,tags: [python-install]}

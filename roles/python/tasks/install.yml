@@ -1,0 +1,61 @@
+# 安装pythonX
+- name: 上传+解压python包
+  unarchive: src={{ pythonFile }}.tgz dest=/opt/modules creates
+  sudo: true
+
+- name: install python
+  command: "{{ item }}"
+  args:
+    creates: /usr/bin/python{{ version }}
+    chdir: /opt/modules/{{ pythonFile }}
+  with_items:
+    - "./configure"
+    - "make"
+    - "make install"
+  sudo: true
+
+- name: 备份pythonX的执行文件
+  command: cp /usr/bin/python /usr/bin/python{{ version }}
+  args:
+    creates: /usr/bin/python{{ version }}
+  sudo: true
+
+- name: 创建软链接
+  file: src=/usr/bin/python{{version}} dest=/usr/bin/python force=true state=link
+  sudo: true
+
+- name: 修改yum的内容
+  command: sed -i 's/\/usr\/bin\/python.*/\/usr\/bin\/python2.6/' /usr/bin/yum
+  sudo: true
+
+
+#安装easy_install
+- name: 上传ez_setup.py
+  copy: src=ez_setup.py dest=/opt/modules/src/ez_setup.py
+  sudo: true
+
+- name: 运行ez_setup.py
+  command: python{{ version }} /opt/modules/src/ez_setup.py
+  args:
+    creates: /usr/local/bin/easy_install-{{ version }}
+  sudo: true
+
+- name: 创建easy_install的软链
+  file: src=/usr/local/bin/easy_install-{{ version }} dest=/usr/bin/easy_install-{{ version }} force=true state=link
+  sudo: true
+
+#安装pip
+- name: 安装pip
+  command: easy_install-{{ version }} pip
+  args:
+    creates: /usr/local/bin/pip
+  sudo: true
+
+
+- name: 创建pip的软链1
+  file: src=/usr/local/bin/pip{{ version }} dest=/usr/bin/pip{{ version }} state=link force=true
+  sudo: true
+
+- name: 创建pip的软链2
+  file: src=/usr/local/bin/pip{{ version }} dest=/usr/bin/pip state=link force=true
+  sudo: true

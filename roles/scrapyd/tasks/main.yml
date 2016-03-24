@@ -1,0 +1,21 @@
+- name: listversions.json
+  tags: scrapyd-listversions
+  command: curl http://localhost:6800/listversions.json?project={{ projectName }}
+  register: scrapydListversions
+- debug: var=scrapydListversions.stdout
+  tags: scrapyd-listversions
+
+- name: listjobs.json
+  tags: scrapyd-listjobs
+  command: curl http://localhost:6800/listjobs.json?project={{ projectName }}
+  register: scrapydListjobs
+- debug: var=scrapydListjobs.stdout
+  tags: scrapyd-listjobs
+
+- name: cancel.json
+  tags: scrapyd-cancel
+  command: curl http://localhost:6800/cancel.json -d project={{ projectName }} -d job={{ jobId }}
+  register: scrapydCancel
+- debug: var=scrapydCancel.stdout
+  tags: scrapyd-cancel
+

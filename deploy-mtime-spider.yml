@@ -1,0 +1,14 @@
+- hosts: bfc.spider
+  name: test
+  tasks:
+    - name: 打包tar
+      local_action: command chdir=~/work/baofeng/ tar cvf mtime_gather.tar.gz mtime_gather/ --exclude .idea --exclude .git
+    - name: 上传到服务器
+      unarchive: src=~/work/baofeng/mtime_gather.tar.gz dest=/opt/modules
+      sudo: true
+    - name: 提交到scrapy中去
+      command: chdir=/opt/modules/mtime_gather {{ item }}
+      sudo: true
+      with_items:
+        - /usr/local/bin/scrapyd-deploy detail -p mtime_gather
+        - curl http://localhost:6800/schedule.json -d project=mtime_gather -d spider=detail

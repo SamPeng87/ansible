@@ -1,0 +1,20 @@
+- name: yum install
+  yum: name={{ item }} state=present
+  with_items:
+    - libffi
+    - libffi-devel
+    - libxml2-devel
+    - libxslt-devel
+  sudo: true
+
+- name: pip install scrapy and deps
+  pip: name={{ item }}
+  sudo: true
+  tags:
+    - pip-install
+  with_items:
+    - mysql-python
+    - pillow
+    - scrapy
+    - scrapyd
+    - scrapyd-client

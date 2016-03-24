@@ -1,0 +1,6 @@
+# 安装pythonX
+- include: install.yml
+  tags:
+    - python-install
+
+

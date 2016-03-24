@@ -1,0 +1,23 @@
+#- name: 更新yum环境
+#  command: "yum -y update"
+#  tags: update-yum
+#  sudo: true
+
+- name: install the 'Development tools' package group
+  yum: name="@Development tools" state=present
+  tags: install-yum-dev-tools
+  sudo: true
+
+- name: pythonX安装的依赖
+  yum: name={{ item }} state=present
+  with_items:
+    - openssl-devel
+    - zlib-devel
+    - sqlite-devel
+    - mysql-devel
+    - bzip2-devel
+    - xz-libs
+    - wget
+#  command: yum install -y openssl-devel zlib-dev sqlite-devel bzip2-devel zlib-devel bzip2-devel openssl-devel xz-libs wget
+  tags: python
+  sudo: true
